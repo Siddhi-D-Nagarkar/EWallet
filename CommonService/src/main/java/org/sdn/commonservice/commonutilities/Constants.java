@@ -1,4 +1,4 @@
-package org.sdn.notificationservice.utility;
+package org.sdn.commonservice.commonutilities;
 
 public class Constants {
     public final static String USER_ID ="user_id";
@@ -11,7 +11,7 @@ public class Constants {
     public final static String USER_CONTACT ="user_contact";
     public final static String USER_CREATION_TOPIC ="JBDL76USER_CREATE";
     public final static String USER_ALTERATION_TOPIC ="JBDL76USER_CREATE";
-
+    public final static String WALLET_CREATED_TOPIC ="WALLET_CREATED_TOPIC";
 
     public final static String EMPTY_STRING ="";
 }

@@ -3,10 +3,12 @@ package org.sdn.userservice.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
+import org.sdn.commonservice.commonutilities.Constants;
 import org.sdn.userservice.dto.request.UserRequestDTO;
 import org.sdn.userservice.entity.User;
+import org.sdn.userservice.entity.UserType;
 import org.sdn.userservice.repository.UserRepository;
-import org.sdn.userservice.utilities.Constants;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -40,7 +42,7 @@ public class UserService implements UserDetailsService {
         User user = userRequestDTO.toUser();
         user.setAuthorities(userAuthority);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+        user.setUserType(UserType.CUSTOMER);
         User userFromDB = userRepository.findByEmail(userRequestDTO.getEmail());
         JSONObject jsonObject = new JSONObject();
         if (userFromDB != null) {

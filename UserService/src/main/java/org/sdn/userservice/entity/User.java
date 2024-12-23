@@ -33,10 +33,10 @@ public class User implements UserDetails {
     private String address;
     @Column(length = 50)
     private String name;
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     private UserIdentifier identifier;
     private String userIdentifierValue;
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     private UserType userType;
 
     private String authorities;

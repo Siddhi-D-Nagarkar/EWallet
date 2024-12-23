@@ -3,9 +3,8 @@ package org.sdn.notificationservice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.json.simple.JSONObject;
-import org.sdn.notificationservice.utility.Constants;
+import org.sdn.commonservice.commonutilities.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +32,30 @@ public class Consumer {
             JSONObject object = objectMapper.readValue(message, JSONObject.class);
             String name = (String) object.get(Constants.USER_NAME);
             String email = (String) object.get(Constants.USER_EMAIl);
-
-            simpleMailMessage.setTo(email);
-            simpleMailMessage.setSubject("EWallet User Created !!");
-            simpleMailMessage.setFrom("ewallet@jbdl-76.com");
-            simpleMailMessage.setText("Welcome "+ name+ " to Ewallet. User has been Created, wallet will created in while.");
-            javaMailSender.send(simpleMailMessage);
+            sendEmail(email,"EWallet User Created !!","Welcome "+ name+ " to Ewallet. User has been Created, wallet will created in while.");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
 
+    }
+
+    @KafkaListener(topics = Constants.WALLET_CREATED_TOPIC,groupId = "${notification.consumer.groupid}")
+    public void walletCreateTopicListener(String walletCreatedTopicMessage) throws JsonProcessingException {
+        logger.info("Listener of Wallet Created listens this :- "+walletCreatedTopicMessage);
+        System.out.println("Listener of Wallet Created listens this :- "+walletCreatedTopicMessage);
+        JSONObject object = objectMapper.readValue(walletCreatedTopicMessage, JSONObject.class);
+        String name = (String) object.get(Constants.USER_NAME);
+        String email = (String) object.get(Constants.USER_EMAIl);
+        // Send Email
+        sendEmail(email,"Wallet Created ","Welcome "+ name+ " to Ewallet. Wallet has been created ");
+    }
+
+    private void sendEmail(String receiverEmail, String subject, String body) throws JsonProcessingException {
+        simpleMailMessage.setTo(receiverEmail);
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setFrom("ewallet@jbdl-76.com");
+        simpleMailMessage.setText(body);
+        javaMailSender.send(simpleMailMessage);
     }
 }

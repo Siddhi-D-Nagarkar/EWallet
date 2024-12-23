@@ -1,16 +1,13 @@
-package org.sdn.notificationservice;
+package org.sdn.walletservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Arrays;
-import java.util.List;
-
 @SpringBootApplication
-public class NotificationApplication {
+public class WalletServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(NotificationApplication.class, args);
+		SpringApplication.run(WalletServiceApplication.class, args);
 	}
 
 }

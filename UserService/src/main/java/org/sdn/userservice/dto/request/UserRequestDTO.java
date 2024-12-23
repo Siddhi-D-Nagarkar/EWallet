@@ -10,7 +10,7 @@ import org.sdn.userservice.entity.UserIdentifier;
 
 @Setter
 @Getter
-public class UserRequestDTO {
+public class    UserRequestDTO {
     private String name;
     @NotBlank(message = "email should not be blank")
     private String email;
