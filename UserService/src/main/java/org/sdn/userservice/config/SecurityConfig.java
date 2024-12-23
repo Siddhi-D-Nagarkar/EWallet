@@ -1,5 +1,7 @@
 package org.sdn.userservice.config;
 
+import org.sdn.userservice.entity.UserType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,12 +17,15 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SecurityConfig {
+    @Value("${user.Authority}")
+    private String userAuthority;
     //Authentication
     //Authorization
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/user/addUpdate/**").permitAll()
+                        .requestMatchers("/start-txn/**").hasAnyAuthority(userAuthority)
                         .anyRequest().authenticated()
                 ).formLogin(withDefaults())
                 .httpBasic(withDefaults()).csrf(csrf ->csrf.disable());
