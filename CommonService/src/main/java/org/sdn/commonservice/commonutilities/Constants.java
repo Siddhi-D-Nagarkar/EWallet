@@ -12,6 +12,9 @@ public class Constants {
     public final static String USER_CREATION_TOPIC ="JBDL76USER_CREATE";
     public final static String USER_ALTERATION_TOPIC ="JBDL76USER_CREATE";
     public final static String WALLET_CREATED_TOPIC ="WALLET_CREATED_TOPIC";
+    public final static String TXN_INITIATED_TOPIC ="TXN_INITIATED_TOPIC";
+    public final static String TXN_SAVED ="TXN_SAVED";
+    public final static String WALLET_UPDATED_TOPIC ="WALLET_UPDATED_TOPIC";
 
     public final static String EMPTY_STRING ="";
 }

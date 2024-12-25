@@ -33,6 +33,7 @@ public class    UserRequestDTO {
                 .identifier(this.identifier)
                 .userIdentifierValue(this.userIdentifierValue)
                 .enabled(true)
+                .credentialsNonExpired(true)
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .build();

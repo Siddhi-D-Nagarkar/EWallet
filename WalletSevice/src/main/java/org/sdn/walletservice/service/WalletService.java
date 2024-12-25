@@ -14,7 +14,7 @@ public class WalletService {
     private WalletRepository walletRepository;
 
 
-    public WalletResponseDTO walletDetails(String contactNo, String type, double amount) {
+    public WalletResponseDTO walletDetails(String contactNo, String type, Double amount) {
         Wallet wallet = walletRepository.findByContact(contactNo);
         if (wallet == null) {
             return WalletResponseDTO.builder()

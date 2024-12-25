@@ -1,6 +1,8 @@
 package org.sdn.walletservice.consumer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.json.simple.JSONObject;
 import org.sdn.commonservice.commonutilities.Constants;
 import org.sdn.walletservice.entity.Wallet;
@@ -30,7 +32,7 @@ public class KafkaConsumer {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    @KafkaListener(topics = Constants.USER_CREATION_TOPIC)
+    @KafkaListener(topics = Constants.USER_CREATION_TOPIC,containerFactory = "userCreationListenerContainerFactory")
     public void walletCreation(String message, Acknowledgment ack) {
         System.out.println("Received Message in group foo: " + message);
         try {
@@ -54,6 +56,33 @@ public class KafkaConsumer {
 
         }
 
+
+        ack.acknowledge();
+    }
+
+    @KafkaListener(topics = Constants.TXN_SAVED,containerFactory = "txnSavedListenerContainerFactory")
+    @Transactional
+    public void txnSaved(String message, Acknowledgment ack) throws JsonProcessingException {
+        JSONObject jsonObject = objectMapper.readValue(message,JSONObject.class);
+        String senderContact = (String) jsonObject.get("senderContact");
+        String receiverContact = (String) jsonObject.get("receiverContact");
+        Double amount = (Double) jsonObject.get("amountToTransfer");
+//        producerMessage.put("txnId", txn.getTxnId());
+//        producerMessage.put("status", txn.getTxnStatus());
+
+        // Update Wallet For the Sender
+        walletRepository.updateWallet(senderContact,-amount);
+
+        // Update Wallet For the Receiver
+        walletRepository.updateWallet(receiverContact,amount);
+
+        // Send to queue that wallet has been updated
+
+        JSONObject jsonWalletCreatedTopicData = new JSONObject();
+        jsonWalletCreatedTopicData.put("message","Wallet Updated successfully");
+        jsonWalletCreatedTopicData.put("status","success");
+        jsonWalletCreatedTopicData.put("txn_id",jsonObject.get("txnId"));
+        kafkaTemplate.send(Constants.WALLET_UPDATED_TOPIC,objectMapper.writeValueAsString(jsonWalletCreatedTopicData));
 
         ack.acknowledge();
     }

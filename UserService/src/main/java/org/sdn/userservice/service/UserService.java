@@ -10,6 +10,7 @@ import org.sdn.userservice.entity.UserType;
 import org.sdn.userservice.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,13 +30,15 @@ public class UserService implements UserDetailsService {
     private String userAuthority;
 
     @Autowired
+    @Qualifier("stringTemplate")
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
     private ObjectMapper objectMapper;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
+        return user;
     }
 
     public User addUpdate(UserRequestDTO userRequestDTO) throws JsonProcessingException {

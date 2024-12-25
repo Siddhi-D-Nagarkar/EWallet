@@ -19,7 +19,7 @@ public class WalletInfoController {
     @GetMapping("/userWalletDetails")
     public ResponseEntity<WalletResponseDTO> userWalletDetails(@RequestParam("contactNo") String contactNo,
                                                                @RequestParam("type") String type,
-                                                               @RequestParam("amount") double amount
+                                                               @RequestParam(value = "amount",required = false) Double amount
     ) {
         WalletResponseDTO wallet = walletService.walletDetails(contactNo,type,amount);
         return new ResponseEntity<>(wallet, HttpStatus.OK);

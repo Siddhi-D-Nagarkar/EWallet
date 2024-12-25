@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class UserValidationRequestDTO {
-     private String TxnAmount;
+     private Double txnAmount;
      private String message;
      private String receiverContactNumber;
 }
